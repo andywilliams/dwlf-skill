@@ -143,6 +143,16 @@ Backtests are async — POST triggers, then poll GET until complete.
 3. **Ask the user** which symbols to activate for
 4. **Activate symbols** → `POST /strategy-symbols/{strategyId}/enable-all` with `{ "symbols": ["BTC-USD", "ETH-USD"] }`
 
+### Editing Events or Strategies
+
+> ⚠️ **Any update to a custom event or strategy requires recompilation!**
+> The evaluator runs the **compiled** output, not the visual graph. If you update nodes, edges, conditions, or parameters without recompiling, the changes have **no effect**.
+
+- After editing an event: `POST /custom-events/{id}/compile`
+- After editing a strategy: `POST /visual-strategies/{id}/compile`
+
+Always recompile immediately after any `PUT` update call.
+
 ### Checking Active Symbols
 - Event symbols: `GET /custom-event-symbols/event/{eventId}`
 - Strategy symbols: `GET /strategy-symbols/strategy/{strategyId}`
