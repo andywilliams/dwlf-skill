@@ -58,7 +58,8 @@ If user says "BTC" → use `BTC-USD`. If "TSLA" → use `TSLA`.
 | GET | `/support-resistance/{symbol}` | S/R levels with scores |
 | GET | `/chart-indicators/{symbol}?interval=1d` | All indicators (RSI, EMA, MACD, etc.) |
 | GET | `/trendlines/{symbol}` | Auto-detected trendlines |
-| GET | `/events?symbol={symbol}&limit=20` | Indicator events (breakouts, crossovers) |
+| GET | `/events?symbol={symbol}&limit=20` | System events (breakouts) |
+| GET | `/events?type=custom_event&scope=user&symbol={symbol}&days=30` | User's custom events (wcl, dss, reversals etc.) |
 
 ### Strategies & Signals
 | Method | Path | Description |
@@ -130,4 +131,5 @@ Support/Resistance, Trendlines, Candlestick Patterns, SMC (Order Blocks, FVGs, B
 
 ## Detailed Reference
 
-For full endpoint details, parameters, and response shapes: read `references/api-endpoints.md`.
+- **API endpoints** (params, response shapes): read `references/api-endpoints.md`
+- **Strategy builder** (node types, edge wiring, examples): read `references/strategy-builder.md`
