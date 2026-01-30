@@ -174,3 +174,23 @@ Generate a new API key.
 
 ### DELETE /accounts/api-keys/{keyId}
 Revoke an API key.
+
+## Academy (CDN — no auth required)
+
+Base URL: `https://academy.dwlf.co.uk/live`
+
+15 tracks, 60+ lessons covering DWLF concepts — indicators, events, strategies, charting, and more.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `https://academy.dwlf.co.uk/live/manifest.json` | List all tracks and lessons |
+| GET | `https://academy.dwlf.co.uk/live/lessons/{slug}.md` | Get lesson content (markdown) |
+
+### GET /manifest.json
+Full manifest of all tracks and lessons.
+- Response: `{ tracks: [{ id, title, description, lessons: [{ slug, title, level, estimatedMinutes }] }] }`
+
+### GET /lessons/{slug}.md
+Individual lesson content in markdown format.
+- Response: raw markdown text
+- Images reference `assets/img/` — prefix with base URL for absolute paths

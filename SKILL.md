@@ -129,6 +129,17 @@ EMA (multiple periods), SMA, RSI, MACD, Bollinger Bands, DSS (Double Smoothed St
 Stochastic RSI, ATR, ADX, OBV, Volume Profile, Ichimoku Cloud, Fibonacci Retracement,
 Support/Resistance, Trendlines, Candlestick Patterns, SMC (Order Blocks, FVGs, BOS/ChoCH).
 
+## Academy
+
+DWLF Academy is a CDN-hosted collection of educational content (15 tracks, 60+ lessons) covering indicators, events, strategies, charting, and more. No auth required.
+
+Use academy tools to read lesson content and understand DWLF concepts:
+- `dwlf_list_academy_tracks` — browse all tracks and lessons
+- `dwlf_search_academy` — search by keyword
+- `dwlf_get_academy_lesson` — read a specific lesson (markdown)
+
+When a user asks "how does X work in DWLF?" or "what is DSS?", check the academy first — it likely has a lesson explaining it.
+
 ## Detailed Reference
 
 - **API endpoints** (params, response shapes): read `references/api-endpoints.md`
