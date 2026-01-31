@@ -121,6 +121,15 @@ Backtests are async — POST triggers, then poll GET until complete.
 | GET | `/strategy-symbols/strategy/:strategyId` | Get active symbols for a strategy |
 | GET | `/strategy-symbols` | List all strategy-symbol associations |
 
+### AI Summaries
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/ai/dashboard` | Full account overview: watchlist, signals, trades, portfolios, strategies, events |
+| GET | `/ai/symbol-brief/{symbol}` | Single-symbol snapshot: price, candles, indicators, S/R, events, signals |
+| GET | `/ai/strategy-performance` | All strategies with signal stats, win rate, P&L breakdowns |
+
+> 💡 **Use these first!** The AI summary endpoints are pre-aggregated for AI consumption. When a user asks "how's BTC?" or "what's going on?", hit these before making multiple individual calls.
+
 ### Evaluations
 | Method | Path | Description |
 |--------|------|-------------|

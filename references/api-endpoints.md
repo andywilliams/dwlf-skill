@@ -86,6 +86,23 @@ Trigger a backtest. Returns immediately, results computed async.
 Get backtest results. Poll until `status: "complete"`.
 - Response: `{ backtestId, status, results: { trades, winRate, totalReturn, sharpe, ... } }`
 
+## AI Summaries
+
+Pre-aggregated endpoints optimised for AI agents. Use these for broad queries before making individual calls.
+
+### GET /ai/dashboard
+Full account overview in a single call: watchlist with prices, active signals, open trades, portfolios, strategies, and recent events.
+- Requires `markets:read` permission; other sections degrade gracefully based on permissions.
+- Response: `{ watchlist, signals, trades, portfolios, strategies, recentEvents, ... }`
+
+### GET /ai/symbol-brief/{symbol}
+Condensed single-symbol view: latest price with change, recent candles, key indicators, S/R levels, recent events, and active signals.
+- Response: `{ symbol, price, change, candles, indicators, supportResistance, events, signals, ... }`
+
+### GET /ai/strategy-performance
+All strategies with signal stats and performance metrics: total signals, active signals, win rate, avg R/R, total P&L, and per-strategy breakdowns.
+- Response: `{ totalSignals, activeSignals, winRate, avgRR, totalPnL, strategies: [...] }`
+
 ## Portfolio
 
 ### GET /portfolios
