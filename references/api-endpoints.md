@@ -103,6 +103,59 @@ Condensed single-symbol view: latest price with change, recent candles, key indi
 All strategies with signal stats and performance metrics: total signals, active signals, win rate, avg R/R, total P&L, and per-strategy breakdowns.
 - Response: `{ totalSignals, activeSignals, winRate, avgRR, totalPnL, strategies: [...] }`
 
+## Chart Annotations
+
+### GET /v2/annotations
+List annotations for a symbol.
+- Params: `symbol` (required), `timeframe` (required)
+- Response: `{ annotations: [{ annotationId, symbol, timeframe, type, data, origin, createdAt, updatedAt }] }`
+
+### POST /v2/annotations
+Create an annotation.
+- Body: `{ symbol, timeframe, type: "hline"|"text"|"trendline"|"rectangle"|"channel", data: {...}, origin: "user"|"ai"|"system" }`
+- **hline data:** `{ price, color, label, lineStyle, lineWidth, showPrice }`
+- **text data:** `{ text, price, time, color, fontSize }`
+- **trendline data:** `{ startPrice, endPrice, startTime, endTime, color, lineStyle, lineWidth }`
+- **rectangle data:** `{ startPrice, endPrice, startTime, endTime, color, fillOpacity }`
+- **channel data:** `{ startPrice, endPrice, startTime, endTime, width, color, fillOpacity }`
+- Response: `{ annotation: { annotationId, symbol, timeframe, type, data, origin, createdAt } }`
+
+### PUT /v2/annotations/:annotationId
+Update an annotation. Merges `data` fields — partial update preserves sibling fields.
+- Body: `{ data: { ... } }` (any top-level fields: `symbol`, `timeframe`, `type`, `data`, `origin`)
+- Response: `{ annotation: { annotationId, ... } }`
+
+### DELETE /v2/annotations/:annotationId
+Delete an annotation.
+- Response: `{ deleted: true }`
+
+### POST /v2/annotations/bulk
+Bulk create annotations.
+- Body: `{ annotations: [{ symbol, timeframe, type, data, origin }, ...] }`
+- Response: `{ created: number, annotations: [...] }`
+
+## Position Sizing
+
+### POST /v2/tools/position-size
+Calculate position size based on risk parameters.
+- Body: `{ accountSize, riskPercent, entryPrice, stopLoss, symbol? }`
+- Response: `{ positionSize, riskAmount, stopDistance, symbol? }`
+
+## User Settings
+
+### GET /v2/user/settings
+Get user settings.
+- Response: `{ settings: { eventNotifications: [...], ... } }`
+
+### PUT /v2/user/settings
+Update user settings. Merges with existing settings.
+- Body: `{ settings: { eventNotifications: [...], ... } }`
+- Response: `{ settings: { ... } }`
+
+### DELETE /v2/user/settings/:settingKey
+Delete a specific setting by key.
+- Response: `{ deleted: true }`
+
 ## Portfolio
 
 ### GET /portfolios
@@ -128,17 +181,45 @@ List trades with filters.
 Log a new trade.
 - Body: `{ symbol, direction (long|short), entryPrice, stopLoss?, takeProfit?, notes? }`
 
-### PUT /trades/{tradeId}
-Update a trade.
+### PUT /v2/trades/:tradeId
+Update a trade (partial update).
+- Body: partial fields (e.g. `{ exitPrice, notes, status }`)
+- Response: `{ trade: { tradeId, ... } }`
+
+### DELETE /v2/trades/:tradeId
+Delete a trade.
+- Response: `{ deleted: true }`
 
 ### POST /trades/{tradeId}/initial-execution
 Record trade execution details.
 
-### GET /trade-plans
-List trade plans.
+## Trade Plans
 
-### POST /trade-plans
+### GET /v2/trade-plans
+List trade plans.
+- Response: `{ tradePlans: [{ planId, symbol, direction, entryPrice, stopLoss, takeProfit, notes, status, createdAt }] }`
+
+### GET /v2/trade-plans/:planId
+Get a specific trade plan.
+- Response: `{ tradePlan: { planId, ... } }`
+
+### POST /v2/trade-plans
 Create a trade plan.
+- Body: `{ symbol, direction, entryPrice, stopLoss?, takeProfit?, notes?, rationale? }`
+- Response: `{ tradePlan: { planId, ... } }`
+
+### PUT /v2/trade-plans/:planId
+Update a trade plan.
+- Body: partial update fields
+- Response: `{ tradePlan: { planId, ... } }`
+
+### DELETE /v2/trade-plans/:planId
+Delete a trade plan.
+- Response: `{ deleted: true }`
+
+### POST /v2/trade-plans/:planId/duplicate
+Duplicate a trade plan.
+- Response: `{ tradePlan: { planId, ... } }` (new plan with copied fields)
 
 ## Watchlist
 

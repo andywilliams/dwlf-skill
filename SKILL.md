@@ -4,9 +4,11 @@ description: >
   Interact with DWLF (dwlf.co.uk), a market analysis platform for crypto and stocks.
   Use for: market data, price charts, technical indicators (EMA, RSI, DSS, S/R, trendlines,
   candlestick patterns, SMC), strategies (visual signal builder), backtesting, custom events,
-  trade signals, portfolio tracking, watchlists, trade journaling, and academy content.
+  trade signals, portfolio tracking, watchlists, trade journaling, chart annotations,
+  trade plans, position sizing, and academy content.
   Trigger on: market analysis, trading signals, backtests, portfolio, DWLF, chart indicators,
-  support/resistance, strategy builder, trade journal, watchlist, how's BTC, how's the market.
+  support/resistance, strategy builder, trade journal, watchlist, chart annotations, trade plans,
+  position sizing, how's BTC, how's the market.
 metadata:
   clawdbot:
     emoji: "📊"
@@ -40,6 +42,65 @@ Helper script: `scripts/dwlf-api.sh`
 ./scripts/dwlf-api.sh POST /visual-backtests '{"strategyId":"...","symbol":"BTC-USD"}'
 ```
 
+## Annotation Examples
+
+```bash
+# Create a horizontal line annotation at a key support level
+./scripts/dwlf-api.sh POST /annotations '{
+  "symbol": "BTC-USD",
+  "timeframe": "1d",
+  "type": "hline",
+  "data": { "price": 95000, "color": "#00ff00", "label": "Key Support", "lineStyle": "solid", "lineWidth": 2, "showPrice": true },
+  "origin": "ai"
+}'
+
+# Create a text annotation on chart
+./scripts/dwlf-api.sh POST /annotations '{
+  "symbol": "ETH-USD",
+  "timeframe": "4h",
+  "type": "text",
+  "data": { "text": "Breakout zone", "price": 3800, "time": "2025-06-01T00:00:00Z", "color": "#ffaa00", "fontSize": 14 },
+  "origin": "ai"
+}'
+
+# Bulk create multiple annotations
+./scripts/dwlf-api.sh POST /annotations/bulk '{
+  "annotations": [
+    { "symbol": "BTC-USD", "timeframe": "1d", "type": "hline", "data": { "price": 100000, "color": "#ff0000", "label": "Resistance" }, "origin": "ai" },
+    { "symbol": "BTC-USD", "timeframe": "1d", "type": "hline", "data": { "price": 92000, "color": "#00ff00", "label": "Support" }, "origin": "ai" }
+  ]
+}'
+
+# List annotations for a symbol
+./scripts/dwlf-api.sh GET "/annotations?symbol=BTC-USD&timeframe=1d"
+
+# Update an annotation (merges data — only changes specified fields)
+./scripts/dwlf-api.sh PUT /annotations/abc123 '{ "data": { "color": "#ff0000" } }'
+```
+
+## Trade Plan & Position Sizing Examples
+
+```bash
+# Calculate position size
+./scripts/dwlf-api.sh POST /tools/position-size '{
+  "accountSize": 10000,
+  "riskPercent": 2,
+  "entryPrice": 95000,
+  "stopLoss": 93000,
+  "symbol": "BTC-USD"
+}'
+
+# Create a trade plan
+./scripts/dwlf-api.sh POST /trade-plans '{
+  "symbol": "BTC-USD",
+  "direction": "long",
+  "entryPrice": 95000,
+  "stopLoss": 93000,
+  "takeProfit": 100000,
+  "notes": "Bounce off key support with RSI divergence"
+}'
+```
+
 ## Symbol Format
 
 - Crypto: `BTC-USD`, `ETH-USD`, `SOL-USD` (always with `-USD` suffix)
@@ -60,6 +121,37 @@ If user says "BTC" → use `BTC-USD`. If "TSLA" → use `TSLA`.
 | GET | `/trendlines/{symbol}` | Auto-detected trendlines |
 | GET | `/events?symbol={symbol}&limit=20` | System events (breakouts) |
 | GET | `/events?type=custom_event&scope=user&symbol={symbol}&days=30` | User's custom events (wcl, dss, reversals etc.) |
+
+### Chart Annotations
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/annotations?symbol={symbol}&timeframe={tf}` | List annotations |
+| POST | `/annotations` | Create annotation (hline, text, trendline, rectangle, channel) |
+| PUT | `/annotations/{annotationId}` | Update annotation (merges data fields) |
+| DELETE | `/annotations/{annotationId}` | Delete annotation |
+| POST | `/annotations/bulk` | Bulk create annotations |
+
+### Trade Plans
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/trade-plans` | List trade plans |
+| GET | `/trade-plans/{planId}` | Get trade plan |
+| POST | `/trade-plans` | Create trade plan |
+| PUT | `/trade-plans/{planId}` | Update trade plan |
+| DELETE | `/trade-plans/{planId}` | Delete trade plan |
+| POST | `/trade-plans/{planId}/duplicate` | Duplicate trade plan |
+
+### Position Sizing
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/tools/position-size` | Calculate position size from risk params |
+
+### User Settings
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/user/settings` | Get user settings |
+| PUT | `/user/settings` | Update user settings |
+| DELETE | `/user/settings/{settingKey}` | Delete a setting |
 
 ### Strategies & Signals
 | Method | Path | Description |
