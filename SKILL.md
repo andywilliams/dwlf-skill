@@ -76,10 +76,16 @@ If user says "BTC" → use `BTC-USD`. If "TSLA" → use `TSLA`.
 ### Backtesting
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/visual-backtests` | Trigger backtest (async) |
-| GET | `/visual-backtests/{id}` | Get backtest results |
+| POST | `/backtests` | Trigger backtest (async) |
+| GET | `/backtests` | List backtests |
+| GET | `/backtests/summary` | Backtest summary |
+| GET | `/backtests/{requestId}` | Get backtest status |
+| GET | `/backtests/{requestId}/results` | Get backtest results |
+| DELETE | `/backtests/{requestId}` | Delete a backtest |
 
-Backtests are async — POST triggers, then poll GET until complete.
+Backtests are async — POST triggers, then poll GET until `status: "completed"`.
+- Body: `{ strategyId, symbols: ["BTC-USD"], startDate: "2025-01-01", endDate: "2026-01-30" }`
+- Note: `symbols` is an **array**, not `symbol` (singular).
 
 ### Portfolio & Trades
 | Method | Path | Description |
