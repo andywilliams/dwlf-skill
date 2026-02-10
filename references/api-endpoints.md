@@ -237,7 +237,16 @@ Remove symbol from watchlist.
 ## Custom Events
 
 ### GET /custom-events
-List user's custom events.
+List user's custom events. Returns full definitions including visual graph data.
+
+### GET /custom-events/notifications?days=7
+**Key endpoint for monitoring!** Returns all recently fired custom events where `notifyOnFire: true`, across ALL symbols, in one call.
+- Query params: `days` (default 7) — how far back to look
+- Response: `{ notifications: [{ symbol, eventName, date, confidenceScore, triggeredInputs, reasoning, ... }] }`
+- The `eventName` field contains the human-readable name (e.g. "wcl_confirmed", "bullish_reversal")
+- The `eventType` field is always "custom_event" — use `eventName` to distinguish events
+- This is the same data source as the "Your Event Alerts" panel in the UI
+- **Use this instead of querying events per-symbol** — much more efficient
 
 ### POST /custom-events
 Create a custom event definition.
