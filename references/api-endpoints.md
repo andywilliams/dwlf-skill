@@ -2,6 +2,24 @@
 
 Base URL: `https://api.dwlf.co.uk/v2`
 
+## Semantic Layer
+
+Pre-aggregated market context endpoints — the preferred way to get market state.
+
+### GET /regime/{symbol}
+Current market regime classification.
+- Params: `?history=true` returns full regime history
+- Response: `{ symbol, regime: { trend, cycle, momentum, volatility, confidence }, since, timestamp }`
+- Auth: markets:read
+
+### GET /intelligence/{symbol}
+Full semantic snapshot for a symbol — price, active events, FSM state, regime, S/R levels.
+- Response: `{ symbol, price, regime, fsmState, activeEvents, signalQuality, timestamp }`
+
+### GET /briefing/daily
+Cross-asset daily briefing across the full watchlist.
+- Response: `{ date, symbols: { [symbol]: { price, regime, keyLevels, activeEvents, recentTransitions } }, crossAsset: { sectorSentiment }, meta }`
+
 ## Market Data
 
 ### GET /market-data/{symbol}
@@ -360,6 +378,45 @@ Generate a new API key.
 
 ### DELETE /accounts/api-keys/{keyId}
 Revoke an API key.
+
+## Agent Registration
+
+Programmatic account creation for AI agents — no browser or Google OAuth required.
+
+### POST /agent/register
+Register a new account programmatically.
+- Body: `{ email: string, agentId?: string, purpose?: string }`
+- Response: `{ accountId, apiKey, status: "unverified", scopes: [...], message }`
+- Public endpoint (no auth)
+- User role assigned immediately — API key works straight away
+- Verify email to unlock compute features (backtests, evaluations)
+
+## API Key Management
+
+### GET /api-keys/scopes
+List available scopes for the current account. Requires login auth (not API key).
+
+### GET /api-keys/{keyId}/usage
+Usage stats for a specific API key with date range filters.
+- Params: `?from=YYYY-MM-DD&to=YYYY-MM-DD`
+
+## Kanban
+
+### GET /kanban/tasks
+List kanban tasks.
+- Params: `?status=backlog|in-progress|review|done|archived&assignee=&limit=`
+
+### POST /kanban/tasks
+Create a task.
+- Body: `{ title, description?, status?, priority?, assignee?, labels? }`
+
+### PUT /kanban/tasks/{taskId}
+Update a task (status, priority, assignee, etc.).
+- Body: partial update fields
+
+### POST /kanban/tasks/{taskId}/comments
+Add a comment to a task.
+- Body: `{ comment: string }`
 
 ## Academy (CDN — no auth required)
 
