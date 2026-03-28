@@ -5,7 +5,8 @@ description: >
   Use for: market data, price charts, technical indicators (EMA, RSI, DSS, S/R, trendlines,
   candlestick patterns, SMC), strategies (visual signal builder), backtesting, custom events,
   trade signals, portfolio tracking, watchlists, trade journaling, chart annotations,
-  trade plans, position sizing, and academy content.
+  trade plans, position sizing, and academy content. Also supports semantic layer endpoints
+  (regime, intelligence, briefing) for structured market context, and kanban/task management.
   Trigger on: market analysis, trading signals, backtests, portfolio, DWLF, chart indicators,
   support/resistance, strategy builder, trade journal, watchlist, chart annotations, trade plans,
   position sizing, how's BTC, how's the market.
@@ -121,6 +122,16 @@ If user says "BTC" → use `BTC-USD`. If "TSLA" → use `TSLA`.
 | GET | `/trendlines/{symbol}` | Auto-detected trendlines |
 | GET | `/events?symbol={symbol}&limit=20` | System events (breakouts) |
 | GET | `/events?type=custom_event&scope=user&symbol={symbol}&days=30` | User's custom events (wcl, dss, reversals etc.) |
+
+### Semantic Layer (Preferred)
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/regime/{symbol}` | Market regime classification (trend, cycle, momentum, volatility) |
+| GET | `/regime/{symbol}?history=true` | Full regime history |
+| GET | `/intelligence/{symbol}` | Full semantic snapshot: price, events, FSM state, regime, S/R |
+| GET | `/briefing/daily` | Cross-asset daily briefing across watchlist |
+
+> 💡 **Preferred for market context!** The semantic layer endpoints provide named events and structured data rather than raw candles. Use regime, intelligence, and briefing to get market context quickly.
 
 ### Chart Annotations
 | Method | Path | Description |
