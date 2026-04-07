@@ -201,7 +201,16 @@ Backtests are async — POST triggers, then poll GET until `status: "completed"`
 |--------|------|-------------|
 | GET | `/custom-events` | List custom events |
 | POST | `/custom-events` | Create custom event |
-| GET | `/custom-events/{id}` | Event details |
+| GET | `/custom-events/{id}` | Event details (includes executionTier, complexityScore, graphMetrics) |
+| POST | `/custom-events/preflight` | Validate event graph without saving — returns tier, complexity, plan limits, suggestions |
+| POST | `/custom-events/{id}/compile` | Compile event (agentHints include tier/complexity/plan info) |
+
+### Account & Quotas
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/quotas/my` | Plan tier, usage, limits, and custom event policy limits (fast/async path constraints) |
+
+> **Tip:** Before creating complex custom events, call `/custom-events/preflight` to check whether the graph will be accepted and which execution tier it will land in. Call `/quotas/my` to learn your plan's limits.
 
 ### Custom Event Symbol Activation
 | Method | Path | Description |

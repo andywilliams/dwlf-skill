@@ -244,7 +244,21 @@ Create a custom event definition.
 - Body: `{ name, conditions, symbols? }`
 
 ### GET /custom-events/{eventId}
-Event details and trigger history.
+Event details and trigger history. Response includes `executionTier` (fast/async), `complexityScore`, and `graphMetrics`.
+
+### POST /custom-events/preflight
+Validate a custom event graph WITHOUT saving. Returns execution tier, complexity score with breakdown, graph metrics, plan policy limits, errors, warnings, and suggested fixes. Use this before creating complex events.
+- Body: `{ name, visual: { nodes: [...], edges: [...] }, description?, metadata?, version? }`
+- Response: `{ valid, executionTier, complexityScore, scoreBreakdown, metrics, tierPolicy: { tier, fastScoreMax, asyncScoreMax, allowAsync }, policyErrors, suggestedFixes, warnings, errors, saveAllowed, status, summary }`
+
+### POST /custom-events/{eventId}/compile
+Compile a custom event into executable form. Response includes `agentHints` with `executionTier`, `complexityScore`, `planTier`, `allowsAsync`, and `tierCeiling`.
+
+## Quotas and Plan
+
+### GET /quotas/my
+Current user's plan tier, resource usage, limits, and custom event policy limits.
+- Response: `{ tier, role, usage: { customEvents, strategies, fsms, onDemandEvalsToday }, quotas: {...}, customEventPolicy: { tierPolicy: { fastScoreMax, asyncScoreMax, allowAsync }, pathLimits: { fast: { maxNodeCount, maxLeafCount, maxOrFanout, ... }, async: { ... } } } }`
 
 ## Custom Event Symbol Activation
 
